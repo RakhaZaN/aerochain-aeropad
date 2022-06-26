@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- AOS -->
+    <!-- <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" /> -->
+    <!-- CSS -->
+    <link rel="stylesheet" href="./public/css/style.css">
+
+    <!-- Fav Icon -->
+    <link rel="shortcut icon" href="./public/images/fav.svg" type="image/x-icon">
+    <title>Aeropad</title>
+</head>
+
+<body class="font-inter font-normal bg-black text-white">
+
+    <!-- Header -->
+    <header class="relative z-50">
+        <!-- Navbar -->
+        <nav class="fixed left-0 right-0 top-0 py-4 md:py-6">
+            <div class="container flex items-center">
+                <!-- Humberger Menu -->
+                <div id="burger-menu" class="flex items-center text-slate-500 p-2 rounded hover:bg-white">
+                    <i class="fa fa-bars"></i>
+                </div>
+                <!-- Logo Brand -->
+                <!-- <a href="#" class="ml-4">
+                    <img src="./public/images/icon.svg" alt="icon" class="h-12">
+                </a> -->
+                <div class="ml-auto flex">
+                    <span class="btn-sm bg-gray-200" id="chain">BSC Mainnet</span>
+                    <form class="inline-block">
+                        <button type="button" onclick="connect()" class="btn-sm btn-light flex flex-nowrap"
+                            id="address">Connect Wallet</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Off canvas | sidebar menu -->
+        <aside class="hidden sidebar-menu">
+            <nav class="relative flex flex-col py-6 px-6 max-w-sm h-full bg-black overflow-y-auto">
+                <div class="flex items-center mb-4">
+                    <img src="/public/images/icon.svg" alt="Logo" class="w-40" />
+                    <button class="sidebar-close ml-auto">
+                        <svg class="h-6 w-6 text-slate-600 cursor-pointer hover:text-slate-800"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <ul class="flex flex-col text-sm gap-y-2">
+                    <li>
+                        <a class="sidebar-items" href="#">Home</a>
+                    </li>
+                    <li>
+                        <a class="sidebar-items" href="./create-token.html">Create Token</a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+    </header>
+
+    <div class="py-6"></div>
+    <!-- Main Content -->
+    <main class="pt-12 container">
+
+        <h1 class="text-3xl mb-12">Current Presales</h1>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4" id="wrapper"></div>
+
+    </main>
+
+    <!-- Loader -->
+    <div class="fixed hidden items-center justify-center inset-0 bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full"
+        id="loading">
+        <img src="./public/images/load-white.gif" alt="" class="w-24">
+    </div>
+
+    <!-- JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.6.6/ethers.umd.min.js"
+        integrity="sha512-za1vwN3yPBeFCjsPWyMfeHAUByvIaYevZRF81oV/kUv6D9bqZEwppA2aDsHD2vmrIf+aQrhGHt+g5+AG7EDjng=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+        <script src="./public/js/main.js"></script>
+        <script src="./public/js/callApi.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const dataAPI = getData();
+            const wrapper = document.querySelector('#wrapper');
+            dataAPI.then(function (data) {
+                let cards = '';
+                Object.keys(data.documents).map((key) => {
+                    // console.log(data[key]);
+                    cards += `<div class=" card card-secondary overflow-hidden">
+    <img src="./public/images/example-image.jpg" alt="examples" class="w-full">
+    <div class="card-body">
+        <h5 class="text-lg font-normal">Token Name</h5>
+        <p class="text-sm text-gray-500">0,01</p>
+        <p class="text-sm text-gray-500">0,1</p>
+        <hr class="my-2 opacity-10">
+        <a href="" class="btn btn-light btn-sm">Contribute</a>
+    </div>
+    <div class="">
+    </div>
+</div>`;
+                });
+                // console.log(cards);
+                wrapper.innerHTML += cards;
+                // console.log(data);
+            });
+
+            const burger = document.querySelector('#burger-menu');
+            const menu = document.querySelector('.sidebar-menu');
+            const close = document.querySelector('.sidebar-close');
+            const sidebar_items = document.querySelectorAll('.sidebar-items');
+
+            burger.addEventListener('click', function () {
+                menu.classList.toggle('hidden');
+            });
+            close.addEventListener('click', function () {
+                menu.classList.toggle('hidden');
+            });
+            for (let i = 0; i < sidebar_items.length; i++) {
+                const item = sidebar_items[i];
+                item.addEventListener('click', function () {
+                    menu.classList.toggle('hidden');
+                });
+            }
+
+            const nav_items = document.querySelectorAll('.nav-items');
+            for (let i = 0; i < nav_items.length; i++) {
+                const item = nav_items[i];
+                item.addEventListener('click', function () {
+                    removeActive()
+                    item.classList.add('nav-active')
+                })
+            }
+
+            function removeActive() {
+                for (let i = 0; i < nav_items.length; i++) {
+                    const item = nav_items[i];
+                    if (item.classList.contains('nav-active')) {
+                        item.classList.remove('nav-active');
+                    }
+                }
+            }
+
+            let scrollpos = window.scrollY
+            const header = document.querySelector("nav")
+            const header_height = header.offsetHeight
+
+            const add_class_on_scroll = () => header.classList.add("fade-in")
+            const remove_class_on_scroll = () => header.classList.remove("fade-in")
+
+            window.addEventListener('scroll', function () {
+                scrollpos = window.scrollY;
+
+                if (scrollpos >= header_height) {
+                    add_class_on_scroll()
+                } else {
+                    remove_class_on_scroll()
+                }
+
+                // console.log(scrollpos)
+            })
+
+            const dropdowns = document.querySelectorAll(".dropdown");
+            dropdowns.forEach(dropdown => {
+                dropdown.querySelector('.dropdown-button').addEventListener("click", () => {
+                    dropdown.querySelector('ul').classList.toggle('hidden');
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
