@@ -1,5 +1,5 @@
 module.exports = {
-  content: ['index.html'],
+  content: ['index.html', 'detail.html'],
   theme: {
     fontFamily: {
       inter: ['Inter, sans-serif'],
